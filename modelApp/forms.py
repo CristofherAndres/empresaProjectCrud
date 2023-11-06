@@ -1,5 +1,5 @@
 from django import forms
-from modelApp.models import Persona
+from modelApp.models import Persona, Estado
 from django.core import validators
 
 #Actualizar el dato
@@ -11,12 +11,13 @@ class PersonaForm(forms.Form):
     nombre      = forms.CharField(max_length=50)
     telefono    = forms.CharField(max_length=12)
     email       = forms.CharField(max_length=50)
-    estado      = forms.CharField(widget=forms.Select(choices=ESTADOS))
+    """ Estado sera desde la tabla estados con la FK """
+    estado      = forms.ModelChoiceField(queryset=Estado.objects.all())
 
     nombre.widget.attrs['class'] = 'form-control'
     telefono.widget.attrs['class'] = 'form-control'
     email.widget.attrs['class'] = 'form-control'
-    estado.widget.attrs['class'] = 'form-control'
+    estado.widget.attrs['class'] = 'form-select'
 
 #Crear el dato y almacenarlo en la DB
 class PersonaForm(forms.ModelForm):
@@ -31,7 +32,8 @@ class PersonaForm(forms.ModelForm):
     )
     telefono    = forms.CharField(max_length=12, required=False)
     email       = forms.CharField(max_length=50)
-    estado      = forms.CharField(widget=forms.Select(choices=ESTADOS))
+    estado      = forms.ModelChoiceField(queryset=Estado.objects.all())
+
 
     def clean_email(self):
         input_email = self.cleaned_data['email']
@@ -43,7 +45,7 @@ class PersonaForm(forms.ModelForm):
     nombre.widget.attrs['class'] = 'form-control'
     telefono.widget.attrs['class'] = 'form-control'
     email.widget.attrs['class'] = 'form-control'
-    estado.widget.attrs['class'] = 'form-control'
+    estado.widget.attrs['class'] = 'form-select'
 
 
     class Meta:
